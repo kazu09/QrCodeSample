@@ -7,9 +7,7 @@ import com.kazu.qrcodesample.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    /**
-     * binding .
-     */
+    /** binding */
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

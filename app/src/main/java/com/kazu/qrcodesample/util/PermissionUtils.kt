@@ -3,17 +3,22 @@ package com.kazu.qrcodesample.util
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.LifecycleOwner
 
 class PermissionUtils constructor(_context: Context) {
 
-    /** context .*/
+    /** context */
     private var context: Context
 
     /** camera permission manifest */
     private val cameraPermission = arrayOf(Manifest.permission.CAMERA)
+
+    private lateinit var previewView: PreviewView
+
+    private lateinit var lifecycleOwner: LifecycleOwner
 
     init {
         context = _context
@@ -27,10 +32,15 @@ class PermissionUtils constructor(_context: Context) {
     private fun isCameraGranted(): Boolean {
         val cameraPermission = ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA)
         if (PackageManager.PERMISSION_GRANTED == cameraPermission) {
-            // パーミッション許可
             return true
         }
         return false
+    }
+
+    fun getParameterForCameraPreview(_previewView: PreviewView,
+                                     _lifecycleOwner: LifecycleOwner) {
+        previewView = _previewView
+        lifecycleOwner = _lifecycleOwner
     }
 
     /**
@@ -40,6 +50,7 @@ class PermissionUtils constructor(_context: Context) {
         if (isCameraGranted()) {
             // permission granted
             // start camera preview
+            CameraPreviewUtils(context, previewView, lifecycleOwner).startCamera()
         } else {
             // permission denied
             // open permission dialog
