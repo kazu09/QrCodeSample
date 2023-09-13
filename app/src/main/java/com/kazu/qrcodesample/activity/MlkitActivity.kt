@@ -8,19 +8,19 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.kazu.qrcodesample.databinding.ActivityMlkitBinding
+import com.kazu.qrcodesample.util.CameraPreviewUtils
 import com.kazu.qrcodesample.util.PermissionUtils
 
 class MlKitActivity : AppCompatActivity() {
 
-    /**
-     * binding .
-     */
+    /** binding */
     private lateinit var binding: ActivityMlkitBinding
 
-    /**
-     * PermissionUtils .
-     */
+    /** PermissionUtils */
     private lateinit var permissionUtils: PermissionUtils
+
+    /** CameraPreviewUtils */
+    private lateinit var cameraPreviewUtils: CameraPreviewUtils
 
     companion object {
         fun open(context: Context) {
@@ -33,6 +33,10 @@ class MlKitActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         initView()
         permissionUtils = PermissionUtils(this)
+        cameraPreviewUtils = CameraPreviewUtils(this, binding.mlkitPreview, this)
+        // set cameraPreviewUtil parameter
+        permissionUtils.getParameterForCameraPreview(binding.mlkitPreview, this)
+        // request camera permission
         permissionUtils.requestCamera(requestPermissionResult)
     }
 
@@ -45,14 +49,16 @@ class MlKitActivity : AppCompatActivity() {
     /**
      * Register a callback
      */
-    private val requestPermissionResult = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
-        if (granted[Manifest.permission.CAMERA] == true) {
-            // permission granted
-            // start camera preview
-        } else {
-            // permission denied
-            // close Activity
-            Toast.makeText(this, "設定画面からパーミッションを許可してください。", Toast.LENGTH_LONG).show()
+    private val requestPermissionResult =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { granted ->
+            if (granted[Manifest.permission.CAMERA] == true) {
+                // permission granted
+                // start camera preview
+                cameraPreviewUtils.startCamera()
+            } else {
+                // permission denied
+                // close Activity
+                Toast.makeText(this, "設定画面からパーミッションを許可してください。", Toast.LENGTH_LONG).show()
+            }
         }
-    }
 }
