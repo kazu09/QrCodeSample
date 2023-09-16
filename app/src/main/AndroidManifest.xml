@@ -31,7 +31,8 @@
 
         <!-- ZxingActivity -->
         <activity android:name=".activity.ZxingActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:hardwareAccelerated="true"/>
 
         <!-- MlKitActivity -->
         <activity android:name=".activity.MlKitActivity"
