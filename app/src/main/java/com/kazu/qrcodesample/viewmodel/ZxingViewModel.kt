@@ -12,7 +12,8 @@ import com.google.zxing.common.HybridBinarizer
 class ZxingViewModel:ViewModel() {
     var callback: QrReadText? = null
 
-    fun qrCodeAnalyzer(image: ImageProxy, multiFormatReader: MultiFormatReader) {
+    fun qrCodeAnalyzer(image: ImageProxy) {
+        val multiFormatReader = MultiFormatReader()
         val buffer = image.planes[0].buffer
         val bytes = ByteArray(buffer.remaining())
         buffer.get(bytes)
@@ -38,7 +39,16 @@ class ZxingViewModel:ViewModel() {
     }
 
     interface QrReadText {
+        /**
+         * update visible layout.
+         *
+         * @param url read qr text.
+         */
         fun readSuccess(url: String)
+
+        /**
+         * update gone layout.
+         */
         fun readFailure()
     }
 

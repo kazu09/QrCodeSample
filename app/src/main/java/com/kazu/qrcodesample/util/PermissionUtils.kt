@@ -4,11 +4,9 @@ import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.activity.result.ActivityResultLauncher
-import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LifecycleOwner
 
-class PermissionUtils constructor(_context: Context, _qrType: Int) {
+class PermissionUtils constructor(_context: Context) {
 
     /** context */
     private var context: Context
@@ -16,15 +14,8 @@ class PermissionUtils constructor(_context: Context, _qrType: Int) {
     /** camera permission manifest */
     private val cameraPermission = arrayOf(Manifest.permission.CAMERA)
 
-    private lateinit var previewView: PreviewView
-
-    private lateinit var lifecycleOwner: LifecycleOwner
-
-    private var qrType: Int = -1
-
     init {
         context = _context
-        qrType = _qrType
     }
 
     companion object {
@@ -40,12 +31,6 @@ class PermissionUtils constructor(_context: Context, _qrType: Int) {
             }
             return false
         }
-    }
-
-    fun getParameterForCameraPreview(_previewView: PreviewView,
-                                     _lifecycleOwner: LifecycleOwner) {
-        previewView = _previewView
-        lifecycleOwner = _lifecycleOwner
     }
 
     /**

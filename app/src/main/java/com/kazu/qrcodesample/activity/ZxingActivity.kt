@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.ImageProxy
 import androidx.camera.lifecycle.ProcessCameraProvider
-import com.google.zxing.MultiFormatReader
 import com.kazu.qrcodesample.Constants
 import com.kazu.qrcodesample.databinding.ActivityZxingBinding
 import com.kazu.qrcodesample.util.CameraPreviewUtils
@@ -47,10 +46,8 @@ class ZxingActivity : AppCompatActivity(), ZxingViewModel.QrReadText {
         super.onCreate(savedInstanceState)
         Log.d(TAG,"onCreate")
         initView()
-        permissionUtils = PermissionUtils(this, Constants.QR_TYPE_ZXING)
+        permissionUtils = PermissionUtils(this)
         cameraPreviewUtils = CameraPreviewUtils(this, binding.zxingPreview, this)
-        // set cameraPreviewUtil parameter
-        permissionUtils.getParameterForCameraPreview(binding.zxingPreview, this)
         if (isCameraGranted(this)) {
             startCameraPreview()
         }
@@ -86,13 +83,16 @@ class ZxingActivity : AppCompatActivity(), ZxingViewModel.QrReadText {
         setContentView(view)
     }
 
+    /**
+     * Start camera preview processing.
+     */
     private fun startCameraPreview() {
         // start camera preview
         cameraPreviewUtils.startCamera(object : CameraPreviewUtils.ReadQrCallBack{
-            override fun zxing(image: ImageProxy, multiFormatReader: MultiFormatReader, readType: Int) {
+            override fun zxing(image: ImageProxy, readType: Int) {
                 if (Constants.QR_TYPE_ZXING == readType) {
                     // zxing readQr
-                    viewModel.qrCodeAnalyzer(image, multiFormatReader)
+                    viewModel.qrCodeAnalyzer(image)
                 }
             }
 

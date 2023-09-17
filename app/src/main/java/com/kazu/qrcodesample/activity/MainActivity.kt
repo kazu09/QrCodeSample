@@ -15,10 +15,12 @@ class MainActivity : AppCompatActivity() {
         initView()
 
         binding.zxingButton.setOnClickListener {
+            // open zxing camera.
             ZxingActivity.open(this)
         }
 
         binding.mlkitButton.setOnClickListener {
+            // open ml kit camera.
             MlKitActivity.open(this)
         }
     }

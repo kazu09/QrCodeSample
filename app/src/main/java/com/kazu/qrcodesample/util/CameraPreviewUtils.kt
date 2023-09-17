@@ -9,7 +9,6 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
-import com.google.zxing.MultiFormatReader
 import java.util.concurrent.Executors
 
 class CameraPreviewUtils(
@@ -26,11 +25,6 @@ class CameraPreviewUtils(
     /** lifecycleOwner */
     private var lifecycleOwner: LifecycleOwner
 
-    enum class ReadType( val readType: Int) {
-        ZXING(0),
-        ML_KIT(1)
-    }
-
     init {
         previewView = _previewView
         context = _context
@@ -39,6 +33,9 @@ class CameraPreviewUtils(
 
     /**
      * start camera preview
+     *
+     * @param callback Callback.
+     * @param readType Qr code reading processing execution flag.
      */
     fun startCamera(callback: ReadQrCallBack,readType: Int) {
         val cameraProviderFuture = ProcessCameraProvider.getInstance(context)
@@ -49,15 +46,13 @@ class CameraPreviewUtils(
             val cameraSelector =
                 CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build()
 
-            val multiFormatReader = MultiFormatReader()
-
             val imageAnalysis = ImageAnalysis.Builder().build()
             imageAnalysis.setAnalyzer(
                 Executors.newSingleThreadExecutor(),
                 ImageAnalysis.Analyzer { image ->
-                    callback.zxing(image, multiFormatReader,readType)
-                    callback.mlKit(image, readType)
+                    callback.zxing(image,readType)
 
+                    callback.mlKit(image, readType)
                 })
 
             cameraProvider.bindToLifecycle(lifecycleOwner, cameraSelector, preview, imageAnalysis)
@@ -67,7 +62,20 @@ class CameraPreviewUtils(
     }
 
     interface ReadQrCallBack {
-        fun zxing(image: ImageProxy, multiFormatReader: MultiFormatReader, readType: Int)
+        /**
+         * Callback zxing process.
+         *
+         * @param image ImageProxy
+         * @param readType Zxing reading processing execution flag.
+         */
+        fun zxing(image: ImageProxy, readType: Int)
+
+        /**
+         * Callback ml kit process.
+         *
+         * @param image ImageProxy
+         * @param readType Ml kit reading processing execution flag.
+         */
         fun mlKit(image: ImageProxy, readType: Int)
     }
 }
