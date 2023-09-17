@@ -1,3 +1,10 @@
+/**
+ * PermissionUtils.kt
+ * SampleQrCode
+ *
+ * Copyright © 2023年 kazu. All rights reserved.
+ */
+
 package com.kazu.qrcodesample.util
 
 import android.Manifest

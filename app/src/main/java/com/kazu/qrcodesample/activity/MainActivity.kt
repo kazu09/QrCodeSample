@@ -1,3 +1,10 @@
+/**
+ * MainActivity.kt
+ * SampleQrCode
+ *
+ * Copyright © 2023年 kazu. All rights reserved.
+ */
+
 package com.kazu.qrcodesample.activity
 
 import android.os.Bundle
